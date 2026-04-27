@@ -23,11 +23,8 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
-        //var client = _httpClientFactory.CreateClient();
-        //var response = await client.GetAsync("https://restcountries.com/v3.1/all");
         var client = _httpClientFactory.CreateClient("RestCountries");
-        var response = await client.GetAsync("v3.1/all");
-
+        var response = await client.GetAsync("v3.1/all?fields=name,capital,currencies,cca2,flags");
 
         if (response.IsSuccessStatusCode)
         {
