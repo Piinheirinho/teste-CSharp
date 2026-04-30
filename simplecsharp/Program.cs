@@ -2,14 +2,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-/** pedaço de codigo inicio */
 
-//builder.Services.AddHttpClient();
 builder.Services.AddHttpClient("RestCountries", c =>
 {
     c.BaseAddress = new Uri("https://restcountries.com/");
 })
+
 .ConfigurePrimaryHttpMessageHandler(() =>
+
 {
     return new HttpClientHandler
     {
@@ -18,6 +18,7 @@ builder.Services.AddHttpClient("RestCountries", c =>
 });
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

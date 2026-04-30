@@ -1,43 +1,47 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using simplecsharp.Models;
+using System.Linq;
 using System.Text.Json;
 
-namespace MyApp.Namespace
+namespace simplecsharp.Pages;
+
+public class InfopaisModel : PageModel
 {
-    public class InfopaisModel : PageModel
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    public InfopaisModel(IHttpClientFactory httpClientFactory)
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+        _httpClientFactory = httpClientFactory;
+    }
 
-        public InfopaisModel(IHttpClientFactory httpClientFactory)
+    public string CodigoPais { get; set; }
+    public Pais InfoPais { get; set; } = new();
+
+    public async Task<IActionResult> OnGetAsync(string cod)
+    {
+        CodigoPais = cod;
+
+        var client = _httpClientFactory.CreateClient("RestCountries");
+        var response = await client.GetAsync($"https://restcountries.com/v3.1/alpha?codes={cod}&fields=name,capital,currencies,cca2,flags");
+
+        if (response.IsSuccessStatusCode)
         {
-            _httpClientFactory = httpClientFactory;
-        }
-
-        public Pais InfoPais { get; set; }
-        public string CodigoPais { get; set; }
-
-        public async Task<IActionResult> OnGetAsync(string cod)
-        {
-            CodigoPais = cod;
-            var client = _httpClientFactory.CreateClient("apiRest");
-            var response = await client.GetAsync($"countriesfile/{cod}");
-            if (!response.IsSuccessStatusCode)
-            {
-                return NotFound();
-            }
-
             var json = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var artigoResponse = JsonSerializer.Deserialize<CountryApiResponse>(json, options);
+            var countryResponse = JsonSerializer.Deserialize<List<CountryApiResponse>>(json, options)?.FirstOrDefault();
 
-            InfoPais = new Pais
+            if (countryResponse != null)
             {
-                OfficialName = artigoResponse.name?.official,
-                Cca2 = artigoResponse.cca2,
-                FlagUrl = artigoResponse.flags?.png
-            };
-            return Page();
+                InfoPais = new Pais
+                {
+                    OfficialName = countryResponse.name?.official,
+                    Cca2 = countryResponse.cca2,
+                    FlagUrl = countryResponse.flags?.png
+                };
+            }
         }
+
+        return Page();
     }
 }

@@ -1,6 +1,7 @@
 namespace simplecsharp.Models
 {
     public class Pais
+
     {
         public string OfficialName { get; set; }
         public string Cca2 { get; set; }
@@ -8,6 +9,7 @@ namespace simplecsharp.Models
     }
 
     public class CountryApiResponse
+
     {
         public Name name { get; set; }
         public string cca2 { get; set; }
@@ -15,6 +17,7 @@ namespace simplecsharp.Models
     }
 
     public class Name
+
     {
         public string official { get; set; }
     }

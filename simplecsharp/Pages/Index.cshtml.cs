@@ -1,32 +1,36 @@
 using Microsoft.AspNetCore.Mvc;
-
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
-
 using simplecsharp.Models;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+
+
 namespace simplecsharp.Pages;
 
 public class IndexModel : PageModel
+
 {
     private readonly IHttpClientFactory _httpClientFactory;
 
     public IndexModel(IHttpClientFactory httpClientFactory)
+
     {
         _httpClientFactory = httpClientFactory;
     }
 
     public List<Pais> Paises { get; set; } = new();
-
     public async Task OnGetAsync()
+
     {
+        //var client = _httpClientFactory.CreateClient();
+        //var response = await client.GetAsync("https://restcountries.com/v3.1/all");
         var client = _httpClientFactory.CreateClient("RestCountries");
-        var response = await client.GetAsync("v3.1/all?fields=name,capital,currencies,cca2,flags");
+        var response = await client.GetAsync("https://restcountries.com/v3.1/all?fields=name,capital,currencies,cca2,flags");
 
         if (response.IsSuccessStatusCode)
+
         {
             var json = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
@@ -42,17 +46,15 @@ public class IndexModel : PageModel
     }
 
     /*
-private readonly ILogger<IndexModel> _logger;
 
+private readonly ILogger<IndexModel> _logger;
 
     public IndexModel(ILogger<IndexModel> logger)
     {
         _logger = logger;
     }
-
     public void OnGet()
     {
-
     }
 */
 }
