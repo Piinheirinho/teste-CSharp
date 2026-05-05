@@ -1,0 +1,23 @@
+﻿@page
+@model DragonBallModel
+@{
+    ViewData["Title"] = "Lista Dragonball";
+}
+<h1>Lista Dragonball</h1>
+
+@if (Model.DragonBalls?.Count > 0)
+{
+    <div style="display: flex; flex-wrap: wrap;">
+        @foreach (var dragonball in Model.DragonBalls)
+        {
+            <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; width: 200px;">
+                <img src="@dragonball.Imagem" alt="Imagem de @dragonball.Nome" width="100" />
+                <p><strong>@dragonball.Nome</strong></p>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>ERRO : não temos lista </p>
+}
