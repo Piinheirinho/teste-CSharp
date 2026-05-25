@@ -6,6 +6,11 @@ builder.Services.AddRazorPages();
 builder.Services.AddHttpClient("RestCountries", c =>
 {
     c.BaseAddress = new Uri("https://restcountries.com/");
+});
+
+builder.Services.AddHttpClient("dragonball", c =>
+{
+    c.BaseAddress = new Uri("https://dragonball-api.com/api/characters");
 })
 
 
